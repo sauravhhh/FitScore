@@ -209,8 +209,8 @@
     <div class="container">
         <div class="header">
             <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
-            <h1>🏥 Health Calculator</h1>
-            <p>Complete health metrics in one place</p>
+            <h1 style="text-align: left; margin-right: 80px; margin-bottom: 5px;">🏥 Fitscore™</h1>
+            <p style="text-align: left; margin-right: 80px; font-style: italic; opacity: 0.8; margin-top: 0;">Your fitness score</p>
         </div>
 
         <div class="card">
@@ -326,6 +326,7 @@
                 <div class="metric-title">💪 Body Fat % (Estimated)</div>
                 <div class="metric-value" id="bodyFatValue"></div>
                 <div class="status" id="bodyFatStatus"></div>
+                <div class="small">Percentage of your body weight that is made up of fat</div>
             </div>
 
             <div class="metric">
@@ -514,10 +515,10 @@
             const carbs = document.getElementById('carbs').textContent;
             const water = document.getElementById('waterValue').textContent;
 
-            const text = `🏥 My Health Metrics:\n\n📏 BMI: ${bmi}\n🔥 BMR: ${bmr}\n⚡ TDEE: ${tdee} - total daily energy expenditure\n🎯 Goal: ${goal}\n🥩 Protein: ${protein} | 🥑 Fat: ${fat} | 🍞 Carbs: ${carbs}\n💧 Water: ${water}\n\nCalculate yours at Health Calculator!`;
+            const text = `🏥 My Fitscore™ Results:\n\n📏 BMI: ${bmi}\n🔥 BMR: ${bmr}\n⚡ TDEE: ${tdee}\n🎯 Goal Calories: ${goal}\n🥩 Protein: ${protein} | 🥑 Fat: ${fat} | 🍞 Carbs: ${carbs}\n💧 Daily Water: ${water}\n\n-----\nBMI (Body Mass Index) - measures body fat based on height and weight\nBMR (Basal Metabolic Rate) - calories your body burns at rest\nTDEE (Total Daily Energy Expenditure) - total daily calories burned including activity\n\nCheck your Fitscore™ now: sauravhhh.github.io/FitScore`;
 
             if (navigator.share) {
-                navigator.share({ title: 'My Health Metrics', text: text });
+                navigator.share({ title: 'My Fitscore™ Results', text: text });
             } else {
                 navigator.clipboard.writeText(text).then(() => {
                     alert('Results copied to clipboard!');
