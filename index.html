@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --text: #333333;
+            --card: #f8f9fa;
+            --border: #e0e0e0;
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --card: #2d2d2d;
+            --border: #404040;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .metric {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .metric-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .normal { background: var(--success); color: white; }
+        .warning { background: var(--warning); color: white; }
+        .danger { background: var(--danger); color: white; }
+
+        .bmi-bar {
+            height: 8px;
+            background: linear-gradient(to right, #3498db, #2ecc71, #f39c12, #e74c3c);
+            border-radius: 4px;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .bmi-dot {
+            position: absolute;
+            top: -5px;
+            width: 18px;
+            height: 18px;
+            background: var(--text);
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        .macros {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .macro {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        .small {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .macros {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+            <h1>🏥 Health Calculator</h1>
+            <p>Complete health metrics in one place</p>
+        </div>
+
+        <div class="card">
+            <div class="form-group">
+                <label>📅 Age</label>
+                <input type="number" id="age" placeholder="Enter your age" required>
+            </div>
+
+            <div class="form-group">
+                <label>⚧ Sex</label>
+                <select id="sex" required>
+                    <option value="">Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>📏 Height</label>
+                <input type="text" id="height" placeholder="e.g., 5'11 or 5/11 or 175cm" required>
+                <div class="small">Enter as: 5'11 or 5/11 or 175cm</div>
+            </div>
+
+            <div class="form-group">
+                <label>⚖️ Weight (kg)</label>
+                <input type="number" id="weight" placeholder="Enter weight in kg" step="0.1" required>
+            </div>
+
+            <div class="form-group">
+                <label>📐 Waist (cm) - Optional</label>
+                <input type="number" id="waist" placeholder="Waist circumference" step="0.1">
+            </div>
+
+            <div class="form-group">
+                <label>🏃 Activity Level</label>
+                <select id="activity" required>
+                    <option value="">Select</option>
+                    <option value="1.2">Little to No Exercise</option>
+                    <option value="1.375">Light Exercise</option>
+                    <option value="1.55">Moderate Exercise</option>
+                    <option value="1.725">Heavy Exercise</option>
+                    <option value="1.9">Very Heavy Exercise</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>🎯 Goal</label>
+                <select id="goal" required>
+                    <option value="">Select</option>
+                    <option value="lose">Lose Weight</option>
+                    <option value="maintain">Maintain Weight</option>
+                    <option value="gain">Gain Weight</option>
+                </select>
+            </div>
+
+            <button class="btn" onclick="calculate()">📊 Calculate</button>
+        </div>
+
+        <div id="results" class="results">
+            <div class="metric">
+                <div class="metric-title">📏 BMI (Body Mass Index)</div>
+                <div class="metric-value" id="bmiValue"></div>
+                <div class="status" id="bmiStatus"></div>
+                <div class="bmi-bar">
+                    <div class="bmi-dot" id="bmiDot"></div>
+                </div>
+                <div class="small">BMI measures body fat based on height and weight</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">🔥 BMR (Basal Metabolic Rate)</div>
+                <div class="metric-value" id="bmrValue"></div>
+                <div class="small">Calories burned at rest</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">⚡ TDEE (Total Daily Energy Expenditure)</div>
+                <div class="metric-value" id="tdeeValue"></div>
+                <div class="small">Total daily calories burned including activity</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">🎯 Goal Calories</div>
+                <div class="metric-value" id="goalValue"></div>
+                <div class="macros">
+                    <div class="macro">
+                        <div>🥩 Protein</div>
+                        <div id="protein" style="font-weight: bold; color: var(--primary);"></div>
+                    </div>
+                    <div class="macro">
+                        <div>🥑 Fat</div>
+                        <div id="fat" style="font-weight: bold; color: var(--primary);"></div>
+                    </div>
+                    <div class="macro">
+                        <div>🍞 Carbs</div>
+                        <div id="carbs" style="font-weight: bold; color: var(--primary);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">🎯 Ideal Weight</div>
+                <div class="metric-value" id="idealWeight"></div>
+            </div>
+
+            <div class="metric" id="waistMetric" style="display: none;">
+                <div class="metric-title">📐 Waist-to-Height Ratio</div>
+                <div class="metric-value" id="waistRatio"></div>
+                <div class="status" id="waistStatus"></div>
+            </div>
+
+            <div class="metric" id="bodyFatMetric" style="display: none;">
+                <div class="metric-title">💪 Body Fat % (Estimated)</div>
+                <div class="metric-value" id="bodyFatValue"></div>
+                <div class="status" id="bodyFatStatus"></div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">💧 Daily Water Needs</div>
+                <div class="metric-value" id="waterValue"></div>
+                <div id="waterGlasses" style="margin-top: 10px;"></div>
+            </div>
+
+            <button class="btn" onclick="shareResults()" style="background: var(--success);">📤 Share Results</button>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by sauravhhh
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const toggle = document.querySelector('.theme-toggle');
+            
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                toggle.textContent = '☀️';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                toggle.textContent = '🌙';
+            }
+        }
+
+        function parseHeight(input) {
+            input = input.replace(/\s/g, '').toLowerCase();
+            
+            if (input.includes('cm')) {
+                return parseFloat(input.replace('cm', ''));
+            }
+            
+            const separators = ["'", "/", ":", "*"];
+            for (let sep of separators) {
+                if (input.includes(sep)) {
+                    const parts = input.split(sep);
+                    if (parts.length === 2) {
+                        const feet = parseFloat(parts[0]) || 0;
+                        const inches = parseFloat(parts[1]) || 0;
+                        return (feet * 12 + inches) * 2.54;
+                    }
+                }
+            }
+            
+            const num = parseFloat(input);
+            return num > 50 ? num : (num * 12 * 2.54);
+        }
+
+        function calculate() {
+            try {
+                const age = parseInt(document.getElementById('age').value);
+                const sex = document.getElementById('sex').value;
+                const heightInput = document.getElementById('height').value;
+                const weight = parseFloat(document.getElementById('weight').value);
+                const waist = parseFloat(document.getElementById('waist').value);
+                const activity = parseFloat(document.getElementById('activity').value);
+                const goal = document.getElementById('goal').value;
+
+                if (!age || !sex || !heightInput || !weight || !activity || !goal) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                const height = parseHeight(heightInput);
+                if (!height || height <= 0) {
+                    alert('Please enter a valid height');
+                    return;
+                }
+
+                // BMI
+                const bmi = weight / Math.pow(height / 100, 2);
+                let bmiStatus = 'Normal';
+                let bmiClass = 'normal';
+                if (bmi < 18.5) { bmiStatus = 'Underweight'; bmiClass = 'warning'; }
+                else if (bmi >= 25 && bmi < 30) { bmiStatus = 'Overweight'; bmiClass = 'warning'; }
+                else if (bmi >= 30) { bmiStatus = 'Obese'; bmiClass = 'danger'; }
+
+                // BMR (Mifflin-St Jeor)
+                const bmr = sex === 'male' 
+                    ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+                    : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+
+                // TDEE
+                const tdee = bmr * activity;
+
+                // Goal calories
+                let goalCal = tdee;
+                if (goal === 'lose') goalCal -= 500;
+                if (goal === 'gain') goalCal += 500;
+
+                // Macros (30% protein, 30% fat, 40% carbs)
+                const proteinG = Math.round((goalCal * 0.3) / 4);
+                const fatG = Math.round((goalCal * 0.3) / 9);
+                const carbsG = Math.round((goalCal * 0.4) / 4);
+
+                // Ideal weight (Robinson formula)
+                const idealWt = sex === 'male'
+                    ? 52 + 1.9 * ((height / 2.54) - 60)
+                    : 49 + 1.7 * ((height / 2.54) - 60);
+
+                // Water needs
+                const waterL = weight * 0.035;
+                const glasses = Math.round(waterL / 0.25);
+
+                // Display results
+                document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+                document.getElementById('bmiStatus').textContent = bmiStatus;
+                document.getElementById('bmiStatus').className = `status ${bmiClass}`;
+                
+                const bmiPos = Math.max(0, Math.min(100, ((bmi - 15) / 20) * 100));
+                document.getElementById('bmiDot').style.left = bmiPos + '%';
+
+                document.getElementById('bmrValue').textContent = Math.round(bmr) + ' cal/day';
+                document.getElementById('tdeeValue').textContent = Math.round(tdee) + ' cal/day';
+                document.getElementById('goalValue').textContent = Math.round(goalCal) + ' cal/day';
+                document.getElementById('protein').textContent = proteinG + 'g';
+                document.getElementById('fat').textContent = fatG + 'g';
+                document.getElementById('carbs').textContent = carbsG + 'g';
+                document.getElementById('idealWeight').textContent = Math.round(idealWt) + ' kg';
+                document.getElementById('waterValue').textContent = waterL.toFixed(1) + ' L';
+                document.getElementById('waterGlasses').textContent = `≈ ${glasses} glasses (250ml each) 🥤`;
+
+                // Waist measurements
+                if (waist) {
+                    const waistRatio = waist / height;
+                    document.getElementById('waistMetric').style.display = 'block';
+                    document.getElementById('waistRatio').textContent = waistRatio.toFixed(2);
+                    
+                    const waistHealthy = waistRatio < 0.5;
+                    document.getElementById('waistStatus').textContent = waistHealthy ? 'Healthy' : 'Above Recommended';
+                    document.getElementById('waistStatus').className = `status ${waistHealthy ? 'normal' : 'warning'}`;
+
+                    // Body fat estimation (Navy method approximation)
+                    if (sex === 'male') {
+                        const bodyFat = 86.010 * Math.log10(waist) - 70.041 * Math.log10(height) + 36.76;
+                        if (bodyFat > 0 && bodyFat < 50) {
+                            document.getElementById('bodyFatMetric').style.display = 'block';
+                            document.getElementById('bodyFatValue').textContent = bodyFat.toFixed(1) + '%';
+                            
+                            let fatStatus = 'Normal', fatClass = 'normal';
+                            if (bodyFat < 6) { fatStatus = 'Too Low'; fatClass = 'warning'; }
+                            else if (bodyFat > 25) { fatStatus = 'High'; fatClass = 'danger'; }
+                            else if (bodyFat > 18) { fatStatus = 'Above Average'; fatClass = 'warning'; }
+                            
+                            document.getElementById('bodyFatStatus').textContent = fatStatus;
+                            document.getElementById('bodyFatStatus').className = `status ${fatClass}`;
+                        }
+                    } else {
+                        const bodyFat = 163.205 * Math.log10(waist) - 97.684 * Math.log10(height) - 78.387;
+                        if (bodyFat > 0 && bodyFat < 50) {
+                            document.getElementById('bodyFatMetric').style.display = 'block';
+                            document.getElementById('bodyFatValue').textContent = bodyFat.toFixed(1) + '%';
+                            
+                            let fatStatus = 'Normal', fatClass = 'normal';
+                            if (bodyFat < 16) { fatStatus = 'Too Low'; fatClass = 'warning'; }
+                            else if (bodyFat > 32) { fatStatus = 'High'; fatClass = 'danger'; }
+                            else if (bodyFat > 25) { fatStatus = 'Above Average'; fatClass = 'warning'; }
+                            
+                            document.getElementById('bodyFatStatus').textContent = fatStatus;
+                            document.getElementById('bodyFatStatus').className = `status ${fatClass}`;
+                        }
+                    }
+                }
+
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                alert('Error calculating. Please check your inputs.');
+                console.error(error);
+            }
+        }
+
+        function shareResults() {
+            const bmi = document.getElementById('bmiValue').textContent;
+            const bmr = document.getElementById('bmrValue').textContent;
+            const tdee = document.getElementById('tdeeValue').textContent;
+            const goal = document.getElementById('goalValue').textContent;
+            const protein = document.getElementById('protein').textContent;
+            const fat = document.getElementById('fat').textContent;
+            const carbs = document.getElementById('carbs').textContent;
+            const water = document.getElementById('waterValue').textContent;
+
+            const text = `🏥 My Health Metrics:\n\n📏 BMI: ${bmi}\n🔥 BMR: ${bmr}\n⚡ TDEE: ${tdee} - total daily energy expenditure\n🎯 Goal: ${goal}\n🥩 Protein: ${protein} | 🥑 Fat: ${fat} | 🍞 Carbs: ${carbs}\n💧 Water: ${water}\n\nCalculate yours at Health Calculator!`;
+
+            if (navigator.share) {
+                navigator.share({ title: 'My Health Metrics', text: text });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Results copied to clipboard!');
+                }).catch(() => {
+                    alert('Unable to copy. Please copy manually:\n\n' + text);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
