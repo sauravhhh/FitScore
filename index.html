@@ -500,7 +500,7 @@
       ? 52 + 1.9 * (d.height / 2.54 - 60)
       : 49 + 1.7 * (d.height / 2.54 - 60);
 
-    var waterL = d.weight * 0.035;
+    var waterL = Math.min(Math.max(d.weight * 0.05, 4), 6);
     var glasses = Math.round(waterL / 0.25);
 
     var waistRatio = 0, bodyFat = null;
