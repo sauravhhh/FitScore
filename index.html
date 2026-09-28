@@ -500,7 +500,10 @@
       ? 52 + 1.9 * (d.height / 2.54 - 60)
       : 49 + 1.7 * (d.height / 2.54 - 60);
 
-    var waterL = Math.min(Math.max(d.weight * 0.05, 4), 6);
+    /* Medically grounded hydration: ~35 ml/kg total fluid per day (EFSA/IOM range),
+       ~20% comes from food, the rest from drinks, plus an activity top-up. */
+    var actExtra = { '1.2': 0, '1.375': 250, '1.55': 500, '1.725': 750, '1.9': 1000 }[d.activity] || 0;
+    var waterL = (d.weight * 35 * 0.8 + actExtra) / 1000;
     var glasses = Math.round(waterL / 0.25);
 
     var waistRatio = 0, bodyFat = null;
@@ -565,7 +568,7 @@
     }
 
     countUp($('waterValue'), waterL, 700, function (v) { return v.toFixed(1); });
-    $('waterNote').textContent = '≈ ' + glasses + ' glasses (250 ml)';
+    $('waterNote').textContent = '≈ ' + Math.round(waterL / 0.25) + ' glasses · 35 ml/kg, ~20% from food';
 
     resultsShown = true;
     if (!fromAuto) {
