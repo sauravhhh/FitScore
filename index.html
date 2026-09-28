@@ -65,9 +65,11 @@
   /* ---------- Form ---------- */
   .field { margin-bottom:20px; }
   .field > label {
-    display:block; font-size:13px; font-weight:600; color:var(--muted);
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; font-weight:600; color:var(--muted);
     margin-bottom:8px; letter-spacing:.01em;
   }
+  .field > label svg { width:14px; height:14px; flex-shrink:0; }
   .field > label .opt { font-weight:400; }
   .input {
     width:100%; padding:14px 16px; font-family:inherit; font-size:16px; color:var(--text);
@@ -111,7 +113,8 @@
   .score-bar i { display:block; height:100%; width:0; background:var(--accent); border-radius:2px; transition:width 1s cubic-bezier(.22,1,.36,1); }
   .score-note { font-size:13px; color:var(--muted); text-align:center; padding-bottom:8px; }
 
-  .sect { font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:30px 0 4px; }
+  .sect { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:30px 0 4px; }
+  .sect svg { width:15px; height:15px; color:var(--accent); }
   .mrow {
     display:flex; justify-content:space-between; align-items:baseline; gap:16px;
     padding:13px 0; border-bottom:1px solid var(--border);
@@ -157,6 +160,15 @@
     <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7s6.5 7 6.5 11.3a6.5 6.5 0 0 1-13 0C5.5 9.7 12 2.7 12 2.7z"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 8-6-16-3 8H2"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 17 17 3l4 4L7 21l-4-4zM8 12l1.5 1.5M11 9l1.5 1.5M14 6l1.5 1.5"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 7l7-4 7 4M5 7l-2.5 6a3.5 3.5 0 0 0 7 0L7 7M19 7l-2.5 6a3.5 3.5 0 0 0 7 0L21 7M8 21h8"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-pie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.2 15.9A10 10 0 1 1 8 2.8"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
   </defs>
 </svg>
 
@@ -177,11 +189,11 @@
   <form id="form" onsubmit="return false">
     <div class="row-2">
       <div class="field">
-        <label for="age">Age</label>
+        <label for="age"><svg><use href="#i-calendar"/></svg>Age</label>
         <input class="input" type="number" id="age" placeholder="25" min="10" max="100" inputmode="numeric">
       </div>
       <div class="field">
-        <label>Sex</label>
+        <label><svg><use href="#i-user"/></svg>Sex</label>
         <div class="pills">
           <label class="pill"><input type="radio" name="sex" value="male"><span>Male</span></label>
           <label class="pill"><input type="radio" name="sex" value="female"><span>Female</span></label>
@@ -191,23 +203,23 @@
 
     <div class="row-2">
       <div class="field">
-        <label for="height">Height</label>
+        <label for="height"><svg><use href="#i-ruler"/></svg>Height</label>
         <input class="input" type="text" id="height" placeholder="175 cm" inputmode="decimal">
         <div class="hint">175cm, 5'11 or 5/11</div>
       </div>
       <div class="field">
-        <label for="weight">Weight <span class="opt">· kg</span></label>
+        <label for="weight"><svg><use href="#i-scale"/></svg>Weight <span class="opt">· kg</span></label>
         <input class="input" type="number" id="weight" placeholder="70" step="0.1" min="20" max="300" inputmode="decimal">
       </div>
     </div>
 
     <div class="field">
-      <label for="waist">Waist <span class="opt">· cm, optional</span></label>
+      <label for="waist"><svg><use href="#i-ruler"/></svg>Waist <span class="opt">· cm, optional</span></label>
       <input class="input" type="number" id="waist" placeholder="82" step="0.1" min="40" max="200" inputmode="decimal">
     </div>
 
     <div class="field">
-      <label>Activity level</label>
+      <label><svg><use href="#i-activity"/></svg>Activity level</label>
       <div class="pills">
         <label class="pill"><input type="radio" name="activity" value="1.2"><span>Sedentary</span></label>
         <label class="pill"><input type="radio" name="activity" value="1.375"><span>Light</span></label>
@@ -218,7 +230,7 @@
     </div>
 
     <div class="field">
-      <label>Goal</label>
+      <label><svg><use href="#i-target"/></svg>Goal</label>
       <div class="pills">
         <label class="pill"><input type="radio" name="goal" value="lose"><span>Lose</span></label>
         <label class="pill"><input type="radio" name="goal" value="maintain"><span>Maintain</span></label>
@@ -226,7 +238,7 @@
       </div>
     </div>
 
-    <button class="btn" id="calcBtn" type="submit">Calculate</button>
+    <button class="btn" id="calcBtn" type="submit"><svg><use href="#i-bolt"/></svg>Calculate</button>
   </form>
 
   <section id="results" aria-live="polite">
@@ -238,7 +250,7 @@
     <div class="score-bar"><i id="scoreBar"></i></div>
     <p class="score-note" id="scoreInsight"></p>
 
-    <div class="sect">Body</div>
+    <div class="sect"><svg><use href="#i-user"/></svg>Body</div>
     <div class="mrow">
       <div class="k">BMI<small>Body mass index</small></div>
       <div class="v"><span id="bmiValue">–</span> <small>kg/m²</small><br><span class="status" id="bmiStatus"></span></div>
@@ -257,7 +269,7 @@
       <div class="v"><span id="idealValue">–</span> <small>kg</small></div>
     </div>
 
-    <div class="sect">Energy</div>
+    <div class="sect"><svg><use href="#i-bolt"/></svg>Energy</div>
     <div class="mrow">
       <div class="k">BMR<small>At rest</small></div>
       <div class="v"><span id="bmrValue">–</span> <small>kcal/day</small></div>
@@ -271,7 +283,7 @@
       <div class="v"><span id="goalValue">–</span> <small>kcal/day</small></div>
     </div>
 
-    <div class="sect">Macros</div>
+    <div class="sect"><svg><use href="#i-pie"/></svg>Macros</div>
     <div class="macro">
       <div class="mhead"><span>Protein</span><b id="proteinVal">–</b></div>
       <div class="track"><i id="barProtein"></i></div>
@@ -285,7 +297,7 @@
       <div class="track"><i id="barCarbs"></i></div>
     </div>
 
-    <div class="sect">Hydration</div>
+    <div class="sect"><svg><use href="#i-drop"/></svg>Hydration</div>
     <div class="mrow" style="border-bottom:none">
       <div class="k">Daily water<small id="waterNote">–</small></div>
       <div class="v"><span id="waterValue">–</span> <small>litres</small></div>
